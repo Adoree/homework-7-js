@@ -32,15 +32,20 @@ const fetchError = (error) => ({
 export const fetchPokemons = () => (dispatch, getState) => {
   dispatch(beginFetch());
 
-  const page = getState().counter;
+  const page = getState().page;
 
   return fetch(`http://localhost:3001/pokemons?_page=${page}&_limit=10&_embed=catched`)
     .then(res => res.json())
     .then(data => {
       if (data.length < 10) dispatch(fetchedAllPokemons());
-      let pokemons = {};
+      const pokemons = {};
       data.forEach(poke => {
-        pokemons[poke.id] = { ...poke, catched: poke.catched[0]}
+        const placeholder = poke.catched[0] ? poke.catched[0].date : null;
+        pokemons[poke.id] = {
+          name: poke.name,
+          id: poke.id,
+          date: placeholder
+        }
       });
       dispatch(fetchSuccess(pokemons));
       return pokemons;
@@ -71,7 +76,7 @@ const fetchCatchedFailure = (error) => ({
 export const fetchCatchedPokemons = () => (dispatch, getState) => {
   dispatch(fetchCatchedBegin());
 
-  const page = getState().catchedCounter;
+  const page = getState().catchedPage;
 
   return fetch(`http://localhost:3001/catched?_page=${page}&_limit=10&_expand=pokemon`)
     .then(res => res.json())
@@ -94,10 +99,10 @@ export const fetchCatchedPokemons = () => (dispatch, getState) => {
 
 // catch
 
-const catchPokemonSuccess = (pokemon) => ({
+const catchPokemonSuccess = (data) => ({
   type: actionTypes.CATCH_SUCCESS,
   payload: {
-    pokemon
+    data
   },
 });
 
@@ -114,6 +119,7 @@ export const catchPokemon = (id, name) => (dispatch) => {
     body: JSON.stringify({
       date: new Date().toLocaleString(),
       pokemonId: id,
+      id: id,
     }),
     headers: {
       "Content-Type": "application/json",
@@ -154,7 +160,7 @@ const fetchPokeFailure = (error) => ({
 });
 
 const addToCatched = (data) => ({
-  type: actionTypes.ADD_CATCHED,
+  type: actionTypes.ADD_TO_CATCHED,
   payload: {
     data,
   }
@@ -165,10 +171,15 @@ export const fetchPokemon = (id) => (dispatch) => {
   return fetch(`http://localhost:3001/pokemons/${id}?_embed=catched`)
     .then(res => res.json())
     .then(data => {
-      const pokemon = {...data, catched: data.catched[0]};
+      const placeholder = data.catched[0] ? data.catched[0].date : null;
+      const pokemon = {
+        name: data.name,
+        id: data.id,
+        date: placeholder,
+      };
       dispatch(fetchPokeSuccess(pokemon));
-      if (pokemon.catched) dispatch(addToCatched(pokemon));
-      return pokemon
+      if (pokemon.date) dispatch(addToCatched(pokemon));
+      return pokemon;
     })
     .catch(err => dispatch(fetchPokeFailure(err)))
 };

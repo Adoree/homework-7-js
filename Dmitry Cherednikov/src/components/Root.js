@@ -15,7 +15,17 @@ const Root = ({
 );
 
 Root.propTypes = {
-  store: PropTypes.object.isRequired,
+  store: PropTypes.shape({
+    isFetching: PropTypes.bool,
+    isCatching: PropTypes.bool,
+    pokemons: PropTypes.object,
+    counter: PropTypes.number,
+    catched: PropTypes.object,
+    catchedCounter: PropTypes.number,
+    fetchedAllPokemons: PropTypes.bool,
+    fetchedAllCatched: PropTypes.bool,
+    error: PropTypes.string,
+  }),
 };
 
 export default Root;

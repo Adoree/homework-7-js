@@ -1,5 +1,3 @@
-// to be refactored
-
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -12,6 +10,8 @@ class PokeItem extends Component {
   static propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
+    date: PropTypes.string,
+    catchPokemon: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -24,17 +24,7 @@ class PokeItem extends Component {
   };
 
   render() {
-    const { name, id, catched } = this.props;
-
-    let date;
-
-    if (catched) {
-      date = (
-        <span>
-          {catched.date}
-        </span>
-      )
-    }
+    const { name, id, date } = this.props;
 
     return (
       <li>
@@ -50,14 +40,20 @@ class PokeItem extends Component {
             {name}
           </Link>
         </h3>
-        <button
-          disabled={catched}
-          onClick={this.handleClick}
-          className={!catched ? 'button button-active' : 'button button-disabled'}
-        >
-          {catched ? 'catched' : 'catch'}
-        </button>
-        {catched && date}
+        {!this.props.catched &&
+          <button
+            disabled={date}
+            onClick={this.handleClick}
+            className={!date ? 'button button-active' : 'button button-disabled'}
+          >
+            {date ? 'catched' : 'catch'}
+          </button>
+        }
+        {date &&
+          <span>
+            {date}
+          </span>
+        }
       </li>
     )
   }

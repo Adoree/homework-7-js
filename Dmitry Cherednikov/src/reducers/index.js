@@ -1,88 +1,116 @@
 import * as actionTypes from '../constants';
 
 const initialState = {
-  fetchedAllPokemons: false,
-  fetchedAllCatched: false,
-  isFetchingPokemons: false,
-  isFetchingCatched: false,
-  isFetchingPoke: false,
+  isFetching: false,
+  isCatching: false,
   error: null,
   pokemons: {},
-  counter: 1,
+  page: 1,
   catched: {},
-  catchedCounter: 1,
+  catchedPage: 1,
+  fetchedAllPokemons: false,
+  fetchedAllCatched: false,
 };
 
 const pokeApp = (state = initialState, action) => {
-  let copy = JSON.parse(JSON.stringify(state));
   switch(action.type) {
     case actionTypes.FETCH_BEGIN:
-      copy.isFetchingPokemons = true;
-      copy.error = null;
-      return copy;
+      return {
+        ...state,
+        isFetching: true,
+        error: null,
+      };
     case actionTypes.FETCH_SUCCESS:
-      copy.isFetchingPokemons = false;
-      copy.pokemons = {
-        ...copy.pokemons,
-        ...action.payload.data
-      };
-      copy.counter = copy.counter + 1;
-      return copy;
-    case actionTypes.FETCH_CATCHED_BEGIN:
-      copy.isFetchingCatched = true;
-      copy.error = null;
-      return copy;
-    case actionTypes.FETCH_CATCHED_SUCCESS:
-      copy.isFetchingCatched = false;
-      copy.catched = {
-        ...copy.catched,
-        ...action.payload.data,
-      };
-      copy.catchedCounter = copy.catchedCounter + 1;
-      return copy;
-    case actionTypes.FETCH_POKE:
-      copy.isFetching = true;
-      return copy;
-    case actionTypes.FETCH_POKE_SUCCESS:
-      copy.pokemons[action.payload.data.id] = {
-        ...action.payload.data,
-      };
-      return copy;
-    case actionTypes.ADD_CATCHED:
-      copy.catched[action.payload.data.id] = {
-        name: action.payload.data.name,
-        id: action.payload.data.id,
-        catched: action.payload.data.catched.date,
-      };
-      return copy;
-    case actionTypes.CATCH_SUCCESS:
-      copy.catched[action.payload.pokemon.id] = action.payload.pokemon;
-      copy.pokemons[action.payload.pokemon.id] = {
-        ...copy.pokemons[action.payload.pokemon.id],
-        catched: {
-          date: action.payload.pokemon.date,
+      return {
+        ...state,
+        pokemons: {
+          ...state.pokemons,
+          ...action.payload.data,
         },
+        isFetching: false,
+        page: state.page + 1,
       };
-      return copy;
+    case actionTypes.FETCH_CATCHED_BEGIN:
+      return {
+        ...state,
+        isFetching: true,
+        error: null,
+      };
+    case actionTypes.FETCH_CATCHED_SUCCESS:
+      return {
+        ...state,
+        catched: {
+          ...state.catched,
+          ...action.payload.data,
+        },
+        isFetching: false,
+        catchedPage: state.catchedPage + 1,
+      };
+    case actionTypes.FETCH_POKE:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case actionTypes.FETCH_POKE_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        pokemons: {
+          ...state.pokemons,
+          [action.payload.data.id]: {
+            ...action.payload.data,
+          }
+        }
+      };
+    case actionTypes.ADD_TO_CATCHED:
+      return {
+        ...state,
+        catched: {
+          ...state.catched,
+          [action.payload.data.id]: {
+            ...action.payload.data,
+          }
+        }
+      };
+    case actionTypes.CATCH_SUCCESS:
+      return {
+        ...state,
+        catched: {
+          ...state.catched,
+          [action.payload.data.id]: action.payload.data,
+        },
+        pokemons: {
+          ...state.pokemons,
+          [action.payload.data.id]: {
+            ...action.payload.data,
+          }
+        },
+        isCatching: false,
+      };
     case actionTypes.FETCH_FAILURE:
-      copy.isFetchingPokemons = false;
-      return copy;
     case actionTypes.FETCH_CATCHED_FAILURE:
-      copy.isFetchingCatched = false;
-      return copy;
-    case actionTypes.CATCH_FAILURE:
-      copy.error = action.payload.error;
-      return copy;
     case actionTypes.FETCH_POKE_FAILURE:
-      copy.isFetching = false;
-      copy.error = action.payload.error;
-      return copy;
+      return {
+        ...state,
+        isFetching: false,
+        error: action.payload.error,
+      };
+    case actionTypes.CATCH_FAILURE:
+      return {
+        ...state,
+        error: action.payload.error,
+        isCatching: false,
+      };
     case actionTypes.FETCHED_ALL_POKEMONS:
-      copy.fetchedAllPokemons = true;
-      return copy;
+      return {
+        ...state,
+        fetchedAllPokemons: true,
+      };
     case actionTypes.FETCHED_ALL_CATCHED:
-      copy.fetchedAllCatched = true;
-      return copy;
+      return {
+        ...state,
+        fetchedAllCatched: true,
+      };
     default:
       return state;
   }
@@ -98,14 +126,16 @@ export const getCatchedPokemons = (state) => {
   return ids.map(id => state.catched[id]);
 };
 
-export const getIsFetchingPokemons = (state) => state.isFetchingPokemons;
-export const getIsFetchingCatched = (state) => state.isFetchingCatched;
-export const getIsFetchingPoke = (state) => state.isFetchingPoke;
+export const getIsFetching = (state) => state.isFetching;
+
 export const getError = (state) => state.error;
 
 export const getPokemon = (state, id) => {
   return state.pokemons[id];
 };
+
+export const getPokemonsPage = (state) => state.page;
+export const getCatchedPage = (state) => state.catchedPage;
 
 export const getFetchedAllPokemons = (state) => state.fetchedAllPokemons;
 export const getFetchedAllCatched = (state) => state.fetchedAllCatched;

@@ -2,27 +2,39 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
+import List from '../components/List';
 import FetchError from '../components/FetchError';
-import CatchedItem from './CatchedItem';
-import { getCatchedPokemons, getError, getFetchedAllCatched } from '../reducers';
+import { getCatchedPokemons, getError, getIsFetching, getCatchedPage, getFetchedAllCatched } from '../reducers';
 import { fetchCatchedPokemons } from '../actions';
 
 class CatchedList extends Component {
   static propTypes = {
     list: PropTypes.array.isRequired,
+    catchedPage: PropTypes.number.isRequired,
+    fetchCatchedPokemons: PropTypes.func.isRequired,
     fetchedAllCatched: PropTypes.bool.isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    error: PropTypes.string,
   };
 
   static defaultProps = {
     fetchCatchedPokemons: () => {},
   };
 
+  componentDidMount() {
+    if (this.props.catchedPage === 1 && !this.props.fetchedAllCatched) {
+      this.fetchPokemons();
+    }
+  }
+
   fetchPokemons = () => {
     this.props.fetchCatchedPokemons();
   };
 
   render() {
-    const { list, error, fetchedAllCatched } = this.props;
+    const { list, error, isFetching, fetchedAllCatched } = this.props;
+
     if (error && !list.length) {
       return (
         <FetchError
@@ -32,33 +44,32 @@ class CatchedList extends Component {
       )
     }
 
-    return (
-      <div className="wrapper">
-        <ul
-          className="list"
-        >
-          {list.map(elem => (
-            <CatchedItem key={elem.id} {...elem} />
-          ))}
-        </ul>
-        {!fetchedAllCatched &&
-          <button
-            className="button button-load"
-            onClick={this.fetchPokemons}
-          >
-            load
-          </button>
-        }
-      </div>
+    if (!list.length && !isFetching) {
+      return (
+        <p>
+          There are no catched pokemons
+        </p>
+      )
+    }
 
+    return (
+      <List
+        catched
+        list={list}
+        onClick={this.fetchPokemons}
+        isFetching={isFetching}
+        isFetchedAll={fetchedAllCatched}
+      />
     )
   }
 }
 
 const mapStateToProps = (state) => ({
   list: getCatchedPokemons(state),
-  fetchedAllCatched: getFetchedAllCatched(state),
   error: getError(state),
+  fetchedAllCatched: getFetchedAllCatched(state),
+  isFetching: getIsFetching(state),
+  catchedPage: getCatchedPage(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,15 +1,14 @@
-// to be refactored
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const Page = ({ name, id, catched }) => {
+const Page = ({ name, id, date }) => {
   let elem;
-  if (catched) {
+
+  if (date) {
     elem = (
       <p>
-        {catched.date}
+        {date}
       </p>
     )
   } else {
@@ -17,14 +16,6 @@ const Page = ({ name, id, catched }) => {
       <p>
         Not yet catched
       </p>
-    )
-  }
-
-  if (!name) {
-    return (
-      <div>
-        <p>Couldn't fetch your pokemon</p>
-      </div>
     )
   }
 
@@ -51,6 +42,7 @@ const Page = ({ name, id, catched }) => {
 Page.propTypes = {
   name: PropTypes.string,
   id: PropTypes.number,
+  date: PropTypes.string,
 };
 
 export default Page;
