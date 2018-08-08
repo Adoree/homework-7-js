@@ -24,28 +24,36 @@ class PokePage extends Component {
   };
 
   getPokemon = () => {
-    if (!this.props.poke) {
-      this.props.fetchPokemon(this.props.match.params.id);
+    const { poke, fetchPokemon, match } = this.props;
+    if (!poke) {
+      fetchPokemon(match.params.id);
     }
   };
 
+  handleClick = () => {
+    this.props.history.goBack();
+  };
+
   componentDidMount() {
-    this.getPokemon()
+    const { poke, errorMessage } = this.props;
+    if (!poke && !errorMessage) {
+      this.getPokemon();
+    }
   }
 
   render() {
-    const { poke, isFetching, error } = this.props;
+    const { poke, isFetching, errorMessage } = this.props;
 
-    if (!poke && error) {
+    if (!poke && errorMessage) {
       return (
         <FetchError
-          message={error}
+          message={errorMessage}
           onRetry={this.getPokemon}
         />
       )
     }
 
-    if (!poke || isFetching) {
+    if (!poke && isFetching) {
       return (
         <p>
           Fetching...
@@ -53,8 +61,17 @@ class PokePage extends Component {
       )
     }
 
+    if (!poke) {
+      return ((
+        <p>No pokemon found :(</p>
+      ))
+    }
+
     return (
-      <Page {...this.props.poke }/>
+      <Page
+        { ...poke }
+        onClick={this.handleClick}
+      />
     )
   }
 }
@@ -64,7 +81,7 @@ const mapStateToProps = (state, { match }) => {
   return {
     poke: getPokemon(state, id),
     isFetching: getIsFetching(state),
-    error: getError(state),
+    errorMessage: getError(state),
 }};
 
 const mapDispatchToProps = (dispatch) => ({

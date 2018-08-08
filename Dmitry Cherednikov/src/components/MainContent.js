@@ -2,12 +2,14 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import CatchedList from '../containers/CatchedList';
-import PokemonsPage from '../containers/PokemonsPage';
+import PokemonsList from "../containers/PokemonsList";
+import PokePage from "../containers/PokePage";
 
 const MainContent = () => (
   <main>
     <Switch>
-      <Route path='/pokemons' component={PokemonsPage}/>
+      <Route exact path='/pokemons' component={PokemonsList}/>
+      <Route path='/pokemons/:id' component={PokePage}/>
       <Route path='/catched' component={CatchedList}/>
     </Switch>
   </main>

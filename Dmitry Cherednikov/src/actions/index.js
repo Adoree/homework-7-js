@@ -11,26 +11,26 @@ const fetchedAllCatched = () => ({
 
 // fetch
 
-const beginFetch = () => ({
-  type: actionTypes.FETCH_BEGIN,
+const requestPokemons = () => ({
+  type: actionTypes.REQUEST_POKEMONS,
 });
 
-const fetchSuccess = (data) => ({
-    type: actionTypes.FETCH_SUCCESS,
+const fetchPokemonsSuccess = (data) => ({
+    type: actionTypes.FETCH_POKEMONS_SUCCESS,
     payload: {
       data,
     }
 });
 
-const fetchError = (error) => ({
-  type: actionTypes.FETCH_FAILURE,
+const fetchPokemonsError = (error) => ({
+  type: actionTypes.FETCH_POKEMONS_FAILURE,
   payload: {
     error: error.message || 'Something went wrong',
   }
 });
 
 export const fetchPokemons = () => (dispatch, getState) => {
-  dispatch(beginFetch());
+  dispatch(requestPokemons());
 
   const page = getState().page;
 
@@ -44,13 +44,13 @@ export const fetchPokemons = () => (dispatch, getState) => {
         pokemons[poke.id] = {
           name: poke.name,
           id: poke.id,
-          date: placeholder
+          date: placeholder,
         }
       });
-      dispatch(fetchSuccess(pokemons));
+      dispatch(fetchPokemonsSuccess(pokemons));
       return pokemons;
     })
-    .catch(err => dispatch(fetchError(err)));
+    .catch(err => dispatch(fetchPokemonsError(err)));
 };
 
 // fetch catched
@@ -148,7 +148,7 @@ const fetchPoke = () => ({
 const fetchPokeSuccess = (data) => ({
   type: actionTypes.FETCH_POKE_SUCCESS,
   payload: {
-    data
+    data,
   }
 });
 
@@ -169,17 +169,26 @@ const addToCatched = (data) => ({
 export const fetchPokemon = (id) => (dispatch) => {
   dispatch(fetchPoke());
   return fetch(`http://localhost:3001/pokemons/${id}?_embed=catched`)
-    .then(res => res.json())
+    .then(response => {
+      if(!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response;
+    })
+    .then(response => response.json())
     .then(data => {
       const placeholder = data.catched[0] ? data.catched[0].date : null;
+      console.log(1);
       const pokemon = {
         name: data.name,
         id: data.id,
         date: placeholder,
       };
-      dispatch(fetchPokeSuccess(pokemon));
-      if (pokemon.date) dispatch(addToCatched(pokemon));
-      return pokemon;
+      delay(10000).then(() => {
+        dispatch(fetchPokeSuccess(pokemon));
+        if (pokemon.date) dispatch(addToCatched(pokemon));
+        return pokemon;
+      })
     })
     .catch(err => dispatch(fetchPokeFailure(err)))
 };

@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Header /> renders the component 1`] = `
+<header>
+  <nav>
+    <ul
+      className="header-list"
+    >
+      <li>
+        <NavLink
+          activeClassName="link-active"
+          aria-current="page"
+          to="/pokemons"
+        >
+          All
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          activeClassName="link-active"
+          aria-current="page"
+          to="/catched"
+        >
+          Catched
+        </NavLink>
+      </li>
+    </ul>
+  </nav>
+</header>
+`;

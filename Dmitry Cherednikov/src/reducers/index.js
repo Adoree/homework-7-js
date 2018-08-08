@@ -13,14 +13,15 @@ const initialState = {
 };
 
 const pokeApp = (state = initialState, action) => {
+  console.log(action.type);
   switch(action.type) {
-    case actionTypes.FETCH_BEGIN:
+    case actionTypes.REQUEST_POKEMONS:
       return {
         ...state,
         isFetching: true,
         error: null,
       };
-    case actionTypes.FETCH_SUCCESS:
+    case actionTypes.FETCH_POKEMONS_SUCCESS:
       return {
         ...state,
         pokemons: {
@@ -87,7 +88,7 @@ const pokeApp = (state = initialState, action) => {
         },
         isCatching: false,
       };
-    case actionTypes.FETCH_FAILURE:
+    case actionTypes.FETCH_POKEMONS_FAILURE:
     case actionTypes.FETCH_CATCHED_FAILURE:
     case actionTypes.FETCH_POKE_FAILURE:
       return {

@@ -15,12 +15,12 @@ const List = ({
         <PokeItem catched={catched} key={elem.id} {...elem} />
       ))}
     </ul>
-    {!isFetchedAll && !!list.length &&
+    {!isFetchedAll &&
       <button
         onClick={onClick}
         className="button button-load"
       >
-        {isFetching ? 'loading': 'load'}
+        {isFetching ? 'loading...' : 'load'}
       </button>
     }
   </div>

@@ -5,8 +5,14 @@ import PropTypes from 'prop-types';
 
 import List from '../components/List';
 import FetchError from '../components/FetchError';
-import { getPokemons, getError, getFetchedAllPokemons, getIsFetching } from '../reducers'
 import { fetchPokemons } from '../actions';
+import {
+  getPokemons,
+  getError,
+  getFetchedAllPokemons,
+  getIsFetching,
+  getPokemonsPage
+} from '../reducers'
 
 class PokemonsList extends Component {
   static propTypes = {
@@ -14,12 +20,19 @@ class PokemonsList extends Component {
     fetchPokemons: PropTypes.func.isRequired,
     fetchedAllPokemons: PropTypes.bool.isRequired,
     isFetching: PropTypes.bool.isRequired,
+    page: PropTypes.number.isRequired,
     error: PropTypes.string,
   };
 
   static defaultProps = {
     fetchPokemons: () => {},
   };
+
+  componentDidMount() {
+    if (this.props.page === 1 && !this.props.fetchedAllPokemons) {
+      this.fetchPokemons();
+    }
+  }
 
   fetchPokemons = () => {
     this.props.fetchPokemons();
@@ -40,7 +53,7 @@ class PokemonsList extends Component {
     if (!list.length && !isFetching) {
       return (
         <p>
-          There are no pokemons
+          There are no pokemons.
         </p>
       )
     }
@@ -61,6 +74,7 @@ const mapStateToProps = (state) => ({
   error: getError(state),
   fetchedAllPokemons: getFetchedAllPokemons(state),
   isFetching: getIsFetching(state),
+  page: getPokemonsPage(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

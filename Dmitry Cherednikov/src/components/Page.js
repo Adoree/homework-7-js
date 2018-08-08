@@ -1,8 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const Page = ({ name, id, date }) => {
+const Page = ({
+  name,
+  id,
+  date,
+  onClick,
+}) => {
   let elem;
 
   if (date) {
@@ -30,11 +34,14 @@ const Page = ({ name, id, date }) => {
         {name}
       </h1>
       {elem}
-      <Link
-        to='/pokemons'
+      <a
+        onClick={(e) => {
+          e.preventDefault();
+          onClick();
+        }}
       >
         Back
-      </Link>
+      </a>
     </div>
   )
 };
@@ -43,6 +50,7 @@ Page.propTypes = {
   name: PropTypes.string,
   id: PropTypes.number,
   date: PropTypes.string,
+  onClick: PropTypes.func,
 };
 
 export default Page;

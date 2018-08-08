@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FetchError /> renders the component 1`] = `
+<div>
+  <p>
+    Something went wrong
+  </p>
+  <button
+    className="button button-load"
+    onClick={[Function]}
+  >
+    retry
+  </button>
+</div>
+`;
