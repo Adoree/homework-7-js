@@ -9,8 +9,8 @@ const MainContent = () => (
   <main>
     <Switch>
       <Route exact path='/pokemons' component={PokemonsList}/>
-      <Route path='/pokemons/:id' component={PokePage}/>
-      <Route path='/catched' component={CatchedList}/>
+      <Route exact path='/pokemons/:id' component={PokePage}/>
+      <Route exact path='/catched' component={CatchedList}/>
     </Switch>
   </main>
 );

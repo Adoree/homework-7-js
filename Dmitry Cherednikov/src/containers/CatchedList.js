@@ -8,14 +8,14 @@ import FetchError from '../components/FetchError';
 import { getCatchedPokemons, getError, getIsFetching, getCatchedPage, getFetchedAllCatched } from '../reducers';
 import { fetchCatchedPokemons } from '../actions';
 
-class CatchedList extends Component {
+export class CatchedList extends Component {
   static propTypes = {
     list: PropTypes.array.isRequired,
     catchedPage: PropTypes.number.isRequired,
     fetchCatchedPokemons: PropTypes.func.isRequired,
     fetchedAllCatched: PropTypes.bool.isRequired,
     isFetching: PropTypes.bool.isRequired,
-    error: PropTypes.string,
+    errorMessage: PropTypes.string,
   };
 
   static defaultProps = {
@@ -33,12 +33,12 @@ class CatchedList extends Component {
   };
 
   render() {
-    const { list, error, isFetching, fetchedAllCatched } = this.props;
+    const { list, errorMessage, isFetching, fetchedAllCatched } = this.props;
 
-    if (error && !list.length) {
+    if (errorMessage && !list.length) {
       return (
         <FetchError
-          message={error}
+          message={errorMessage}
           onRetry={this.fetchPokemons}
         />
       )
@@ -66,7 +66,7 @@ class CatchedList extends Component {
 
 const mapStateToProps = (state) => ({
   list: getCatchedPokemons(state),
-  error: getError(state),
+  errorMessage: getError(state),
   fetchedAllCatched: getFetchedAllCatched(state),
   isFetching: getIsFetching(state),
   catchedPage: getCatchedPage(state),
@@ -76,11 +76,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchCatchedPokemons: bindActionCreators(fetchCatchedPokemons, dispatch)
 });
 
-CatchedList = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(CatchedList);
-
-
-
-export default CatchedList;

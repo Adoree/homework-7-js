@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<FetchError /> renders the component 1`] = `
+exports[`<FetchError /> renders component 1`] = `
 <div>
   <p>
     Something went wrong

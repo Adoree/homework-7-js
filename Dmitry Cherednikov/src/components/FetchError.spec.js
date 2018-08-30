@@ -3,31 +3,33 @@ import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import FetchError from './FetchError';
 
-describe('<FetchError />', () => {
-  it('renders the component', () => {
-    const mockOnClick = jest.fn();
-    const errorMessage = 'Something went wrong';
-    const wrapper = shallow((
-      <FetchError
-        message={errorMessage}
-        onRetry={mockOnClick}
-      />
-    ));
+const setup = () => {
+  const props = {
+    message: 'Something went wrong',
+    onRetry: jest.fn(),
+  };
 
-    expect(toJson(wrapper)).toMatchSnapshot();
+  const output = shallow((
+    <FetchError { ...props } />
+  ));
+
+  return {
+    output,
+    props,
+  }
+};
+
+describe('<FetchError />', () => {
+  it('renders component', () => {
+    const { output } = setup();
+
+    expect(toJson(output)).toMatchSnapshot();
   });
 
   it('successfully calls the onClick handler', () => {
-    const mockOnClick = jest.fn();
-    const errorMessage = 'Something went wrong';
-    const wrapper = shallow((
-      <FetchError
-        message={errorMessage}
-        onRetry={mockOnClick}
-      />
-    ));
+    const { output, props } = setup();
 
-    wrapper.find('button').simulate('click');
-    expect(mockOnClick.mock.calls.length).toEqual(1)
+    output.find('button').simulate('click');
+    expect(props.onRetry.mock.calls.length).toEqual(1);
   })
 });

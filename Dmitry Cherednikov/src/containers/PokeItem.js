@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { catchPokemon } from '../actions';
 
-let PokeItem = ({
+export let PokeItem = ({
   name,
   id,
   date,
@@ -44,9 +44,15 @@ let PokeItem = ({
 ));
 
 const mapDispatchToProps = (dispatch) => ({
-  catchPokemon: bindActionCreators(catchPokemon, dispatch),
+  onClick: bindActionCreators(catchPokemon, dispatch),
 });
 
-PokeItem = connect(null, mapDispatchToProps)(PokeItem);
+PokeItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  date: PropTypes.string,
+  catched: PropTypes.bool,
+  onClick: PropTypes.func, // perhaps we will redo this
+};
 
-export default PokeItem;
+export default connect(null, mapDispatchToProps)(PokeItem);

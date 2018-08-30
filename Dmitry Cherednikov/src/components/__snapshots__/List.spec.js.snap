@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<List /> renders component 1`] = `
+<div>
+  <ul
+    className="list"
+  >
+    <Connect(Component)
+      date="16.07.2018, 15:39:37"
+      id={1}
+      key="1"
+      name="bulbasaur"
+    />
+    <Connect(Component)
+      date="18.07.2018, 17:46:24"
+      id={2}
+      key="2"
+      name="ivysaur"
+    />
+  </ul>
+  <button
+    className="button button-load"
+    disabled={false}
+    onClick={[Function]}
+  >
+    load
+  </button>
+</div>
+`;

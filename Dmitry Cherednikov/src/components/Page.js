@@ -5,7 +5,7 @@ const Page = ({
   name,
   id,
   date,
-  onClick,
+  onBack,
 }) => {
   let elem;
 
@@ -35,9 +35,10 @@ const Page = ({
       </h1>
       {elem}
       <a
+        className=""
         onClick={(e) => {
           e.preventDefault();
-          onClick();
+          onBack();
         }}
       >
         Back
@@ -47,10 +48,10 @@ const Page = ({
 };
 
 Page.propTypes = {
-  name: PropTypes.string,
-  id: PropTypes.number,
+  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   date: PropTypes.string,
-  onClick: PropTypes.func,
+  onBack: PropTypes.func.isRequired,
 };
 
 export default Page;

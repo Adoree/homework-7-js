@@ -13,7 +13,6 @@ const initialState = {
 };
 
 const pokeApp = (state = initialState, action) => {
-  console.log(action.type);
   switch(action.type) {
     case actionTypes.REQUEST_POKEMONS:
       return {
@@ -31,7 +30,7 @@ const pokeApp = (state = initialState, action) => {
         isFetching: false,
         page: state.page + 1,
       };
-    case actionTypes.FETCH_CATCHED_BEGIN:
+    case actionTypes.REQUEST_CATCHED_POKEMONS:
       return {
         ...state,
         isFetching: true,
@@ -47,7 +46,7 @@ const pokeApp = (state = initialState, action) => {
         isFetching: false,
         catchedPage: state.catchedPage + 1,
       };
-    case actionTypes.FETCH_POKE:
+    case actionTypes.REQUEST_POKE:
       return {
         ...state,
         isFetching: true,
@@ -72,6 +71,12 @@ const pokeApp = (state = initialState, action) => {
             ...action.payload.data,
           }
         }
+      };
+    case actionTypes.START_CATCHING:
+      return {
+        ...state,
+        error: null,
+        isCatching: true,
       };
     case actionTypes.CATCH_SUCCESS:
       return {

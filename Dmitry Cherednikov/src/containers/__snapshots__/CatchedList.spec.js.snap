@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CatchedList /> should render correctly 1`] = `
+<List
+  catched={true}
+  isFetchedAll={false}
+  isFetching={false}
+  list={
+    Array [
+      Object {
+        "date": "15.07.2018, 16:28:48",
+        "id": 1,
+        "name": "bulbasaur",
+      },
+      Object {
+        "date": "15.07.2018, 15:46:37",
+        "id": 2,
+        "name": "ivysaur",
+      },
+      Object {
+        "date": "15.07.2018, 16:28:48",
+        "id": 3,
+        "name": "venusaur",
+      },
+      Object {
+        "date": "15.07.2018, 16:28:49",
+        "id": 4,
+        "name": "charmander",
+      },
+      Object {
+        "date": "15.07.2018, 16:28:50",
+        "id": 5,
+        "name": "charmeleon",
+      },
+      Object {
+        "date": "15.07.2018, 16:28:49",
+        "id": 6,
+        "name": "charizard",
+      },
+      Object {
+        "date": "15.07.2018, 17:56:21",
+        "id": 7,
+        "name": "squirtle",
+      },
+      Object {
+        "date": "15.07.2018, 17:56:20",
+        "id": 8,
+        "name": "wartortle",
+      },
+      Object {
+        "date": "15.07.2018, 17:56:23",
+        "id": 9,
+        "name": "blastoise",
+      },
+      Object {
+        "date": "15.07.2018, 17:57:45",
+        "id": 12,
+        "name": "butterfree",
+      },
+    ]
+  }
+  onClick={[Function]}
+/>
+`;

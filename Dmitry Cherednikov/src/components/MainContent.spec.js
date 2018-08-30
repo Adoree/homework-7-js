@@ -1,12 +1,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import toJson from 'enzyme-to-json';
-import Header from './Header';
+import MainContent from './MainContent';
 
-describe('<Header />', () => {
-  it('renders component', () => {
+describe('<MainContent />', () => {
+  it('should render correctly', () => {
     const wrapper = shallow((
-      <Header />
+      <MainContent />
     ));
 
     expect(toJson(wrapper)).toMatchSnapshot();

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MainContent /> should render correctly 1`] = `
+<main>
+  <Switch>
+    <Route
+      component={[Function]}
+      exact={true}
+      path="/pokemons"
+    />
+    <Route
+      component={[Function]}
+      exact={true}
+      path="/pokemons/:id"
+    />
+    <Route
+      component={[Function]}
+      exact={true}
+      path="/catched"
+    />
+  </Switch>
+</main>
+`;

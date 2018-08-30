@@ -1,28 +1,28 @@
 import * as actionTypes from '../constants';
+import { handleErrors } from '../utils';
 
-const fetchedAllPokemons = () => ({
+export const fetchedAllPokemons = () => ({
   type: actionTypes.FETCHED_ALL_POKEMONS,
 });
 
-const fetchedAllCatched = () => ({
+export const fetchedAllCatched = () => ({
   type: actionTypes.FETCHED_ALL_CATCHED,
 });
 
+// fetch pokemons
 
-// fetch
-
-const requestPokemons = () => ({
+export const requestPokemons = () => ({
   type: actionTypes.REQUEST_POKEMONS,
 });
 
-const fetchPokemonsSuccess = (data) => ({
-    type: actionTypes.FETCH_POKEMONS_SUCCESS,
-    payload: {
-      data,
-    }
+export const fetchPokemonsSuccess = (data) => ({
+  type: actionTypes.FETCH_POKEMONS_SUCCESS,
+  payload: {
+    data,
+  }
 });
 
-const fetchPokemonsError = (error) => ({
+export const fetchPokemonsFailure = (error) => ({
   type: actionTypes.FETCH_POKEMONS_FAILURE,
   payload: {
     error: error.message || 'Something went wrong',
@@ -35,6 +35,7 @@ export const fetchPokemons = () => (dispatch, getState) => {
   const page = getState().page;
 
   return fetch(`http://localhost:3001/pokemons?_page=${page}&_limit=10&_embed=catched`)
+    .then(handleErrors)
     .then(res => res.json())
     .then(data => {
       if (data.length < 10) dispatch(fetchedAllPokemons());
@@ -50,23 +51,23 @@ export const fetchPokemons = () => (dispatch, getState) => {
       dispatch(fetchPokemonsSuccess(pokemons));
       return pokemons;
     })
-    .catch(err => dispatch(fetchPokemonsError(err)));
+    .catch(err => dispatch(fetchPokemonsFailure(err)));
 };
 
 // fetch catched
 
-const fetchCatchedBegin = () => ({
-  type: actionTypes.FETCH_CATCHED_BEGIN,
+export const fetchCatchedBegin = () => ({
+  type: actionTypes.REQUEST_CATCHED_POKEMONS,
 });
 
-const fetchCatchedSuccess = (data) => ({
+export const fetchCatchedSuccess = (data) => ({
   type: actionTypes.FETCH_CATCHED_SUCCESS,
   payload: {
     data,
   }
 });
 
-const fetchCatchedFailure = (error) => ({
+export const fetchCatchedFailure = (error) => ({
   type: actionTypes.FETCH_CATCHED_FAILURE,
   payload: {
     error: error.message || 'Something went wrong',
@@ -79,6 +80,7 @@ export const fetchCatchedPokemons = () => (dispatch, getState) => {
   const page = getState().catchedPage;
 
   return fetch(`http://localhost:3001/catched?_page=${page}&_limit=10&_expand=pokemon`)
+    .then(handleErrors)
     .then(res => res.json())
     .then(data => {
       if (data.length < 10) dispatch(fetchedAllCatched());
@@ -94,19 +96,23 @@ export const fetchCatchedPokemons = () => (dispatch, getState) => {
       dispatch(fetchCatchedSuccess(pokemons));
       return pokemons;
     })
-    .catch(err => dispatch(fetchCatchedFailure(err)))
+    .catch(err => dispatch(fetchCatchedFailure(err)));
 };
 
 // catch
 
-const catchPokemonSuccess = (data) => ({
+export const startCatching = () => ({
+  type: actionTypes.START_CATCHING,
+});
+
+export const catchPokemonSuccess = (data) => ({
   type: actionTypes.CATCH_SUCCESS,
   payload: {
     data
   },
 });
 
-const catchPokemonFailure = (error) => ({
+export const catchPokemonFailure = (error) => ({
   type: actionTypes.CATCH_FAILURE,
   payload: {
     error: error.message || 'Something went wrong',
@@ -114,7 +120,9 @@ const catchPokemonFailure = (error) => ({
 });
 
 export const catchPokemon = (id, name) => (dispatch) => {
-  fetch(`http://localhost:3001/catched`, {
+  dispatch(startCatching());
+
+  return fetch(`http://localhost:3001/catched`, {
     method: 'POST',
     body: JSON.stringify({
       date: new Date().toLocaleString(),
@@ -125,6 +133,7 @@ export const catchPokemon = (id, name) => (dispatch) => {
       "Content-Type": "application/json",
     }
   })
+    .then(handleErrors)
     .then(res => res.json())
     .then(data => ({
         name,
@@ -141,25 +150,25 @@ export const catchPokemon = (id, name) => (dispatch) => {
     })
 };
 
-const fetchPoke = () => ({
-  type: actionTypes.FETCH_POKE,
+export const fetchPoke = () => ({
+  type: actionTypes.REQUEST_POKE,
 });
 
-const fetchPokeSuccess = (data) => ({
+export const fetchPokeSuccess = (data) => ({
   type: actionTypes.FETCH_POKE_SUCCESS,
   payload: {
     data,
   }
 });
 
-const fetchPokeFailure = (error) => ({
+export const fetchPokeFailure = (error) => ({
   type: actionTypes.FETCH_POKE_FAILURE,
   payload: {
     error: error.message || 'Something went wrong',
   }
 });
 
-const addToCatched = (data) => ({
+export const addToCatched = (data) => ({
   type: actionTypes.ADD_TO_CATCHED,
   payload: {
     data,
@@ -168,27 +177,23 @@ const addToCatched = (data) => ({
 
 export const fetchPokemon = (id) => (dispatch) => {
   dispatch(fetchPoke());
+
   return fetch(`http://localhost:3001/pokemons/${id}?_embed=catched`)
-    .then(response => {
-      if(!response.ok) {
-        throw new Error(response.statusText);
-      }
-      return response;
-    })
-    .then(response => response.json())
+    .then(handleErrors)
+    .then(res => res.json())
     .then(data => {
       const placeholder = data.catched[0] ? data.catched[0].date : null;
-      console.log(1);
       const pokemon = {
         name: data.name,
         id: data.id,
         date: placeholder,
       };
-      delay(10000).then(() => {
-        dispatch(fetchPokeSuccess(pokemon));
-        if (pokemon.date) dispatch(addToCatched(pokemon));
-        return pokemon;
-      })
+      return pokemon;
+    })
+    .then(pokemon => {
+      dispatch(fetchPokeSuccess(pokemon));
+      if (pokemon.date) dispatch(addToCatched(pokemon));
+      return pokemon;
     })
     .catch(err => dispatch(fetchPokeFailure(err)))
 };

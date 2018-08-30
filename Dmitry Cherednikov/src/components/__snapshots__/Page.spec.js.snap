@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Page /> should render correctly 1`] = `
+<div
+  className="page"
+>
+  <img
+    alt="pidgey.png"
+    className="img img-large"
+    src="https://raw.githubusercontent.com/epam-js-may-2018/homework-7-js/master/pokemons/16.png"
+  />
+  <h1>
+    pidgey
+  </h1>
+  <p>
+    Not yet catched
+  </p>
+  <a
+    className=""
+    onClick={[Function]}
+  >
+    Back
+  </a>
+</div>
+`;

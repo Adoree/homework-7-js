@@ -14,14 +14,14 @@ import {
   getPokemonsPage
 } from '../reducers'
 
-class PokemonsList extends Component {
+export class PokemonsList extends Component {
   static propTypes = {
     list: PropTypes.array.isRequired,
     fetchPokemons: PropTypes.func.isRequired,
     fetchedAllPokemons: PropTypes.bool.isRequired,
     isFetching: PropTypes.bool.isRequired,
     page: PropTypes.number.isRequired,
-    error: PropTypes.string,
+    errorMessage: PropTypes.string,
   };
 
   static defaultProps = {
@@ -39,12 +39,12 @@ class PokemonsList extends Component {
   };
 
   render() {
-    const { list, error, isFetching, fetchedAllPokemons } = this.props;
+    const { list, errorMessage, isFetching, fetchedAllPokemons } = this.props;
 
-    if (!list.length && error) {
+    if (!list.length && errorMessage) {
       return (
         <FetchError
-          message={error}
+          message={errorMessage}
           onRetry={this.fetchPokemons}
         />
       )
@@ -71,7 +71,7 @@ class PokemonsList extends Component {
 
 const mapStateToProps = (state) => ({
   list: getPokemons(state),
-  error: getError(state),
+  errorMessage: getError(state),
   fetchedAllPokemons: getFetchedAllPokemons(state),
   isFetching: getIsFetching(state),
   page: getPokemonsPage(state),
@@ -81,9 +81,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchPokemons: bindActionCreators(fetchPokemons, dispatch)
 });
 
-PokemonsList = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(PokemonsList);
-
-export default PokemonsList;

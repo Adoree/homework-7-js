@@ -30,6 +30,7 @@ li {
 a {
   text-decoration: none;
   color: #6d9dc5;
+  cursor: pointer;
 }
 
 a:visited {

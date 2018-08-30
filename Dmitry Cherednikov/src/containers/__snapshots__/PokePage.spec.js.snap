@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PokePage /> renders correctly 1`] = `
+<Page
+  date="18.07.2018, 17:46:24"
+  id={16}
+  name="pidgey"
+  onBack={[Function]}
+/>
+`;

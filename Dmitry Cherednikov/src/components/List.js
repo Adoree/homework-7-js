@@ -19,6 +19,7 @@ const List = ({
       <button
         onClick={onClick}
         className="button button-load"
+        disabled={isFetching}
       >
         {isFetching ? 'loading...' : 'load'}
       </button>

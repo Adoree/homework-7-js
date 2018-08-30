@@ -8,7 +8,7 @@ import Page from '../components/Page';
 import { getPokemon, getIsFetching, getError } from '../reducers';
 import { fetchPokemon } from '../actions';
 
-class PokePage extends Component {
+export class PokePage extends Component {
   static propTypes = {
     poke: PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -17,6 +17,7 @@ class PokePage extends Component {
     }),
     isFetching: PropTypes.bool.isRequired,
     fetchPokemon: PropTypes.func.isRequired,
+    errorMessage: PropTypes.string,
   };
 
   static defaultProps = {
@@ -62,15 +63,15 @@ class PokePage extends Component {
     }
 
     if (!poke) {
-      return ((
+      return (
         <p>No pokemon found :(</p>
-      ))
+      )
     }
 
     return (
       <Page
         { ...poke }
-        onClick={this.handleClick}
+        onBack={this.handleClick}
       />
     )
   }
@@ -88,9 +89,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchPokemon: bindActionCreators(fetchPokemon, dispatch)
 });
 
-PokePage = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(PokePage);
-
-export default PokePage;
